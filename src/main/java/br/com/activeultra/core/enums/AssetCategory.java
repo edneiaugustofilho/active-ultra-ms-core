@@ -1,0 +1,53 @@
+package br.com.activeultra.core.enums;
+
+public enum AssetCategory {
+    VEHICLE,
+    HEAVY_EQUIPMENT,
+    TRAILER,
+    FORKLIFT,
+
+    MACHINE,
+    MANUFACTURING_EQUIPMENT,
+    PRODUCTION_LINE,
+    PUMP,
+    MOTOR,
+    COMPRESSOR,
+    GENERATOR,
+
+    ELECTRICAL_SYSTEM,
+    UPS,
+    TRANSFORMER,
+    PANEL,
+    IT_EQUIPMENT,
+
+    HVAC,
+    AIR_CONDITIONER,
+    CHILLER,
+    BOILER,
+
+    BUILDING,
+    ROOM,
+    FACILITY,
+    STRUCTURE,
+    ROOFING,
+    FIRE_SYSTEM,
+    ELEVATOR,
+
+    TOOL,
+    POWER_TOOL,
+    INSTRUMENT,
+    SENSOR,
+
+    SAFETY_EQUIPMENT,
+    FIRE_EXTINGUISHER,
+    PPE,
+
+    FURNITURE,
+    OFFICE_EQUIPMENT,
+
+    LAND,
+    REAL_ESTATE,
+
+    OTHER,
+    UNKNOWN
+}
