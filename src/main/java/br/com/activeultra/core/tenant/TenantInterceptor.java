@@ -16,8 +16,10 @@ public class TenantInterceptor implements HandlerInterceptor {
     private static final String TENANT_HEADER = "X-Tenant-Id";
 
     private static final List<String> SKIP_TENANT_PATHS = List.of(
-            "/health",
-            "/public/**"
+            "/api/health",
+            "/api/public/**",
+            "/core/api/health",
+            "/core/api/public/**"
     );
 
     private final TenantContext tenantContext;
