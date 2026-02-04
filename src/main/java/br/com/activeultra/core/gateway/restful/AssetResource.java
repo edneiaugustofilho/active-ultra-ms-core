@@ -3,7 +3,6 @@ package br.com.activeultra.core.gateway.restful;
 import br.com.activeultra.core.gateway.dto.*;
 import br.com.activeultra.core.service.AssetSearchService;
 import br.com.activeultra.core.service.AssetService;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

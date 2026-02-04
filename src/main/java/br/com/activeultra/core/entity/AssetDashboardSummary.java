@@ -1,19 +1,15 @@
-package br.com.activeultra.core.asset.dashboard;
+package br.com.activeultra.core.entity;
 
-import br.com.activeultra.core.entity.TenantEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "tb_asset_dashboard_summary")
@@ -35,11 +31,9 @@ public class AssetDashboardSummary extends TenantEntity {
     )
     private BigDecimal totalAcquisitionValue;
 
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "by_status", nullable = false, columnDefinition = "jsonb")
-    private Map<String, Long> byStatus;
+    @OneToMany(mappedBy = "summary", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<AssetDashboardSummaryByStatus> byStatus = new ArrayList<>();
 
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "by_category", nullable = false, columnDefinition = "jsonb")
-    private Map<String, Long> byCategory;
+    @OneToMany(mappedBy = "summary", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<AssetDashboardSummaryByCategory> byCategory = new ArrayList<>();
 }

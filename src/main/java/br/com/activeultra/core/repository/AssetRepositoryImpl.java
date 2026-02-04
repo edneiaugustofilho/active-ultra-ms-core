@@ -17,7 +17,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 
-public class AssetRepositoryImpl implements AssetSearchRepository {
+public class AssetRepositoryImpl implements SearchRepository<AssetResumeDto, Asset> {
 
     @PersistenceContext
     private EntityManager entityManager;
