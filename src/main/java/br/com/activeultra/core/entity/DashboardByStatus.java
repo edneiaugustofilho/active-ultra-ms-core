@@ -12,13 +12,13 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
-@Table(name = "tb_asset_dashboard_summary_by_status")
+@Table(name = "tb_dashboard_by_status")
 @Getter
 @Setter
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AssetDashboardSummaryByStatus {
+public class DashboardByStatus {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -30,7 +30,7 @@ public class AssetDashboardSummaryByStatus {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "summary_id", referencedColumnName = "id")
-    private AssetDashboardSummary summary;
+    private Dashboard summary;
 
     @Column(name = "total_assets", nullable = false)
     private Long totalAssets;

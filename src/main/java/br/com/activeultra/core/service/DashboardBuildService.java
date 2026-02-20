@@ -1,13 +1,13 @@
 package br.com.activeultra.core.service;
 
-import br.com.activeultra.core.entity.AssetDashboardSummary;
-import br.com.activeultra.core.entity.AssetDashboardSummaryByCategory;
-import br.com.activeultra.core.entity.AssetDashboardSummaryByStatus;
+import br.com.activeultra.core.entity.Dashboard;
+import br.com.activeultra.core.entity.DashboardByCategory;
+import br.com.activeultra.core.entity.DashboardByStatus;
 import br.com.activeultra.core.gateway.dto.AssetByCategoryDto;
 import br.com.activeultra.core.gateway.dto.AssetByStatusDto;
-import br.com.activeultra.core.repository.AssetDashboardSummaryByCategoryRepository;
-import br.com.activeultra.core.repository.AssetDashboardSummaryByStatusRepository;
-import br.com.activeultra.core.repository.AssetDashboardSummaryRepository;
+import br.com.activeultra.core.repository.DashboardByCategoryRepository;
+import br.com.activeultra.core.repository.DashboardByStatusRepository;
+import br.com.activeultra.core.repository.DashboardRepository;
 import br.com.activeultra.core.repository.AssetRepository;
 import br.com.activeultra.core.tenant.TenantContext;
 import org.springframework.stereotype.Service;
@@ -18,27 +18,27 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-public class AssetDashboardSummaryBuildService {
+public class DashboardBuildService {
 
     private final TenantContext tenantContext;
-    private final AssetDashboardSummaryRepository summaryRepository;
+    private final DashboardRepository dashboardRepository;
     private final AssetRepository assetRepository;
-    private final AssetDashboardSummaryByStatusRepository summaryByStatusRepository;
-    private final AssetDashboardSummaryByCategoryRepository summaryByCategoryRepository;
+    private final DashboardByStatusRepository dashboardByStatusRepository;
+    private final DashboardByCategoryRepository dashboardByCategoryRepository;
 
-    public AssetDashboardSummaryBuildService(TenantContext tenantContext,
-                                             AssetDashboardSummaryRepository summaryRepository,
-                                             AssetRepository assetRepository,
-                                             AssetDashboardSummaryByStatusRepository summaryByStatusRepository,
-                                             AssetDashboardSummaryByCategoryRepository summaryByCategoryRepository) {
+    public DashboardBuildService(TenantContext tenantContext,
+                                 DashboardRepository dashboardRepository,
+                                 AssetRepository assetRepository,
+                                 DashboardByStatusRepository dashboardByStatusRepository,
+                                 DashboardByCategoryRepository dashboardByCategoryRepository) {
         this.tenantContext = tenantContext;
-        this.summaryRepository = summaryRepository;
+        this.dashboardRepository = dashboardRepository;
         this.assetRepository = assetRepository;
-        this.summaryByStatusRepository = summaryByStatusRepository;
-        this.summaryByCategoryRepository = summaryByCategoryRepository;
+        this.dashboardByStatusRepository = dashboardByStatusRepository;
+        this.dashboardByCategoryRepository = dashboardByCategoryRepository;
     }
 
-    public AssetDashboardSummary execute() {
+    public Dashboard execute() {
         if (tenantContext.getTenantId().isEmpty()) {
             throw new IllegalArgumentException("Tenant ID is required");
         }
@@ -50,7 +50,7 @@ public class AssetDashboardSummaryBuildService {
         final List<AssetByStatusDto> byStatusListMap = assetRepository.countByStatus(tenantId);
         final List<AssetByCategoryDto> byCategoryListMap = assetRepository.countByCategory(tenantId);
 
-        final AssetDashboardSummary summary = AssetDashboardSummary.builder()
+        final Dashboard summary = Dashboard.builder()
                 .tenantId(tenantId)
                 .totalAssets(totalAssets)
                 .byStatus(buildByStatus(byStatusListMap))
@@ -58,48 +58,48 @@ public class AssetDashboardSummaryBuildService {
                 .totalAcquisitionValue(totalAcquisitionValue)
                 .build();
 
-        summaryRepository.save(summary);
+        dashboardRepository.save(summary);
         
         summary.getByStatus()
                 .forEach(summaryByStatus -> {
                     summaryByStatus.setSummary(summary);
-                    summaryByStatusRepository.save(summaryByStatus);
+                    dashboardByStatusRepository.save(summaryByStatus);
                 });
         summary.getByCategory()
                 .forEach(summaryByCategory -> {
                     summaryByCategory.setSummary(summary);
-                    summaryByCategoryRepository.save(summaryByCategory);
+                    dashboardByCategoryRepository.save(summaryByCategory);
                 });
 
         return summary;
     }
 
-    private List<AssetDashboardSummaryByStatus> buildByStatus(List<AssetByStatusDto> byStatusListMap) {
-        final List<AssetDashboardSummaryByStatus> byStatusList = new ArrayList<>();
+    private List<DashboardByStatus> buildByStatus(List<AssetByStatusDto> byStatusListMap) {
+        final List<DashboardByStatus> byStatusList = new ArrayList<>();
         for (AssetByStatusDto assetByStatusDto : byStatusListMap) {
             byStatusList.add(buildByStatus(assetByStatusDto));
         }
         return byStatusList;
     }
 
-    private AssetDashboardSummaryByStatus buildByStatus(AssetByStatusDto assetByStatusDto) {
-        return AssetDashboardSummaryByStatus.builder()
+    private DashboardByStatus buildByStatus(AssetByStatusDto assetByStatusDto) {
+        return DashboardByStatus.builder()
                 .status(assetByStatusDto.getStatus())
                 .totalAssets(assetByStatusDto.getTotal())
                 .totalAcquisitionValue(assetByStatusDto.getTotalAcquisitionValue())
                 .build();
     }
 
-    private List<AssetDashboardSummaryByCategory> buildByCategory(List<AssetByCategoryDto> byCategoryListMap) {
-        final List<AssetDashboardSummaryByCategory> byCategoryList = new ArrayList<>();
+    private List<DashboardByCategory> buildByCategory(List<AssetByCategoryDto> byCategoryListMap) {
+        final List<DashboardByCategory> byCategoryList = new ArrayList<>();
         for (AssetByCategoryDto assetByCategoryDto : byCategoryListMap) {
             byCategoryList.add(buildByCategory(assetByCategoryDto));
         }
         return byCategoryList;
     }
 
-    private AssetDashboardSummaryByCategory buildByCategory(AssetByCategoryDto assetByCategoryDto) {
-        return AssetDashboardSummaryByCategory.builder()
+    private DashboardByCategory buildByCategory(AssetByCategoryDto assetByCategoryDto) {
+        return DashboardByCategory.builder()
                 .category(assetByCategoryDto.getCategory())
                 .totalAssets(assetByCategoryDto.getTotal())
                 .totalAcquisitionValue(assetByCategoryDto.getTotalAcquisitionValue())

@@ -12,13 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "tb_asset_dashboard_summary")
+@Table(name = "tb_dashboard")
 @Getter
 @Setter
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AssetDashboardSummary extends TenantEntity {
+public class Dashboard extends TenantEntity {
 
     @Column(name = "total_assets", nullable = false)
     private Long totalAssets;
@@ -32,8 +32,8 @@ public class AssetDashboardSummary extends TenantEntity {
     private BigDecimal totalAcquisitionValue;
 
     @OneToMany(mappedBy = "summary", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<AssetDashboardSummaryByStatus> byStatus = new ArrayList<>();
+    private List<DashboardByStatus> byStatus = new ArrayList<>();
 
     @OneToMany(mappedBy = "summary", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<AssetDashboardSummaryByCategory> byCategory = new ArrayList<>();
+    private List<DashboardByCategory> byCategory = new ArrayList<>();
 }
