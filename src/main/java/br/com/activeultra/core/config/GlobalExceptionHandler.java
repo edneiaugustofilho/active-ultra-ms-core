@@ -17,12 +17,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @Slf4j
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleException(Exception e) {
-        log.error(e.getMessage());
-        return ResponseEntity.internalServerError().body("Erro interno de inesperado");
-    }
-
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<?> handleException(RuntimeException e) {
         log.error(e.getMessage());

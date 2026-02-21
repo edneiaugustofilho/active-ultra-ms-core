@@ -17,8 +17,6 @@ public interface AssetRepository extends JpaRepository<Asset, UUID>, JpaSpecific
 
     boolean existsByTenantIdAndCodeIgnoreCaseAndIdNot(UUID tenantId, String code, UUID id);
 
-    Optional<List<Asset>> findAllByTenantId(UUID tenantId);
-
     Optional<Asset> findByIdAndTenantId(UUID id, UUID tenantId);
 
     Optional<Asset> findByTenantIdAndCode(UUID tenantId, String code);
@@ -41,4 +39,5 @@ public interface AssetRepository extends JpaRepository<Asset, UUID>, JpaSpecific
             "FROM Asset a WHERE a.tenantId = :tenantId AND a.category != 'INACTIVE' GROUP BY a.category")
     List<AssetByCategoryDto> countByCategory(@Param("tenantId") UUID tenantId);
 
+    boolean existsByIdAndTenantId(UUID id, UUID tenantId);
 }
