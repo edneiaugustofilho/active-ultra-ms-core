@@ -14,18 +14,23 @@ public class AssetEventRecordService {
 
     private final AssetEventService assetEventService;
     private final AssetRepository assetRepository;
+    private final TenantService tenantService;
 
     public AssetEventRecordService(AssetEventService assetEventService,
-                                   AssetRepository assetRepository) {
+                                   AssetRepository assetRepository,
+                                   TenantService tenantService) {
         this.assetEventService = assetEventService;
         this.assetRepository = assetRepository;
+        this.tenantService = tenantService;
     }
 
     public void execute(AssetEventType eventType, UUID assetId) {
         if (assetId == null) {
             throw new IllegalArgumentException("ID de Ativo não informado.");
         }
-        Asset asset = assetRepository.findById(assetId).orElseThrow(() -> new IllegalArgumentException(""));
+        Asset asset = assetRepository.findByIdAndTenantId(
+                assetId, tenantService.getTenantId())
+                .orElseThrow(() -> new IllegalArgumentException(""));
 
         AssetEvent assetEvent = AssetEvent.builder()
                 .eventType(eventType)

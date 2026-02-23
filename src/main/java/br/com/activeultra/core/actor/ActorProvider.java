@@ -4,6 +4,6 @@ import java.util.UUID;
 
 public interface ActorProvider {
 
-    UUID getCurrentUserid();
+    UUID getCurrentUserId();
 
 }

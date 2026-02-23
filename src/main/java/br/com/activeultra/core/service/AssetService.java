@@ -5,7 +5,6 @@ import br.com.activeultra.core.enums.AssetEventType;
 import br.com.activeultra.core.enums.AssetStatus;
 import br.com.activeultra.core.gateway.dto.AssetUpsertRequest;
 import br.com.activeultra.core.repository.AssetRepository;
-import br.com.activeultra.core.tenant.TenantContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,12 +14,12 @@ import java.util.UUID;
 public class AssetService {
 
     private final AssetRepository repository;
-    private final AssetDataValidationService validationService;
+    private final AssetValidationService validationService;
     private final AssetEventRecordService assetEventRecordService;
     private final TenantService tenantService;
 
     public AssetService(AssetRepository repository,
-                        AssetDataValidationService validationService,
+                        AssetValidationService validationService,
                         AssetEventRecordService assetEventRecordService,
                         TenantService tenantService) {
         this.repository = repository;

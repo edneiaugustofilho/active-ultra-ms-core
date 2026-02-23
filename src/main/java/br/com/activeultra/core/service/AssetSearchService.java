@@ -1,12 +1,15 @@
 package br.com.activeultra.core.service;
 
 import br.com.activeultra.core.entity.Asset;
+import br.com.activeultra.core.enums.AssetCategory;
+import br.com.activeultra.core.enums.AssetStatus;
 import br.com.activeultra.core.gateway.dto.AssetResumeDto;
 import br.com.activeultra.core.gateway.dto.PageResponse;
 import br.com.activeultra.core.repository.AssetRepository;
 import br.com.activeultra.core.repository.RepositoryHelper;
 import br.com.activeultra.core.repository.SearchInput;
 import br.com.activeultra.core.tenant.TenantContext;
+import br.com.activeultra.core.util.EnumUtil;
 import br.com.activeultra.core.util.StringUtils;
 import jakarta.persistence.criteria.Predicate;
 import lombok.*;
@@ -64,10 +67,10 @@ public class AssetSearchService {
                 predicates.add(queryPredicate);
             }
             if (input.getStatus() != null) {
-                predicates.add(criteriaBuilder.equal(root.get("status"), input.getStatus()));
+                predicates.add(criteriaBuilder.equal(root.get("status"), EnumUtil.parseEnum(AssetStatus.class, input.getStatus())));
             }
             if (input.getCategory() != null) {
-                predicates.add(criteriaBuilder.equal(root.get("category"), input.getCategory()));
+                predicates.add(criteriaBuilder.equal(root.get("category"), EnumUtil.parseEnum(AssetCategory.class, input.getCategory())));
             }
 
 

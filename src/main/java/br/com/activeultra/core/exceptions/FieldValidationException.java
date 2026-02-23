@@ -5,7 +5,7 @@ import lombok.Getter;
 import java.util.List;
 
 @Getter
-public class FieldValidationException extends RuntimeException {
+public class FieldValidationException extends IllegalArgumentException {
 
     private final List<String> errors;
 

@@ -11,7 +11,7 @@ import java.util.UUID;
 public class JwtActorProvider implements ActorProvider {
 
     @Override
-    public UUID getCurrentUserid() {
+    public UUID getCurrentUserId() {
         Authentication authentication =
                 SecurityContextHolder.getContext().getAuthentication();
 

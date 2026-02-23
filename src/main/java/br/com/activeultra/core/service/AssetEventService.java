@@ -42,7 +42,8 @@ public class AssetEventService {
             throw new IllegalArgumentException("Ativo não pode ser nulo.");
         }
         if (assetEvent.getAsset().getId() == null ||
-                assetEvent.getAsset().getTenantId() == null) {
+                !assetRepository
+                        .existsByIdAndTenantId(assetEvent.getAsset().getId(), tenantService.getTenantId())) {
             throw new IllegalArgumentException("Ativo não encontrado.");
         }
         if (assetEvent.getEventType() == null) {
@@ -51,7 +52,7 @@ public class AssetEventService {
     }
 
     private void fillAuthor(AssetEvent assetEvent) {
-        assetEvent.setActorUserId(actorProvider.getCurrentUserid());
+        assetEvent.setActorUserId(actorProvider.getCurrentUserId());
     }
 
     @Transactional

@@ -8,7 +8,6 @@ import br.com.activeultra.core.enums.AssetVehicleType;
 import br.com.activeultra.core.exceptions.FieldValidationException;
 import br.com.activeultra.core.gateway.dto.AssetUpsertRequest;
 import br.com.activeultra.core.repository.AssetRepository;
-import br.com.activeultra.core.tenant.TenantContext;
 import br.com.activeultra.core.util.DateUtil;
 import br.com.activeultra.core.util.EnumUtil;
 import lombok.RequiredArgsConstructor;
@@ -22,10 +21,10 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class AssetDataValidationService {
+public class AssetValidationService {
 
     private final AssetRepository assetRepository;
-    private final TenantContext tenantContext;
+    private final TenantService tenantService;
 
     public void validate(AssetUpsertRequest request) {
         validate(request, null);
@@ -128,7 +127,11 @@ public class AssetDataValidationService {
 
         // ---------- UNIQUE CONSTRAINT (tenant_id, code) ----------
         if (!isBlank(request.code())) {
-            UUID tenantId = tenantContext.getTenantId().orElseThrow(() -> new IllegalArgumentException("Tenant ID not found"));
+            UUID tenantId = tenantService.getTenantId();
+
+            if (tenantId == null) {
+                throw new IllegalStateException("Tenant ID not found.");
+            }
 
             boolean exists = (assetId != null)
                     ? assetRepository.existsByTenantIdAndCodeIgnoreCaseAndIdNot(tenantId, request.code(), assetId)
@@ -157,26 +160,4 @@ public class AssetDataValidationService {
         }
     }
 
-    /**
-     * Parses a LocalDate using DateUtil. If parsing fails, adds a validation error.
-     * <p>
-     * NOTE: DateUtil.DATE_FORMAT is currently "dd/MM/yyyy".
-     * If your JSON sends dates as "yyyy-MM-dd", adjust DateUtil or pass a specific format.
-     */
-    private LocalDate parseLocalDate(String fieldName, String value, List<String> errors) {
-        if (isBlank(value)) {
-            return null;
-        }
-        try {
-            return DateUtil.convertStringToLocalDate(value);
-        } catch (ParseException e) {
-            errors.add(String.format(
-                    "Invalid date format for %s: '%s'. Expected format: %s",
-                    fieldName,
-                    value,
-                    DateUtil.DATE_FORMAT_DB
-            ));
-            return null;
-        }
-    }
 }
