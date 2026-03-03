@@ -1,10 +1,13 @@
 package br.com.activeultra.core.repository;
 
 import br.com.activeultra.core.entity.Asset;
+import br.com.activeultra.core.enums.AssetCategory;
+import br.com.activeultra.core.enums.AssetStatus;
 import br.com.activeultra.core.gateway.dto.AssetByCategoryDto;
 import br.com.activeultra.core.gateway.dto.AssetByStatusDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -40,4 +43,20 @@ public interface AssetRepository extends JpaRepository<Asset, UUID>, JpaSpecific
     List<AssetByCategoryDto> countByCategory(@Param("tenantId") UUID tenantId);
 
     boolean existsByIdAndTenantId(UUID id, UUID tenantId);
+
+    @Modifying
+    @Query("UPDATE Asset SET status = :status WHERE id = :assetId AND tenantId = :tenantId")
+    void updateStatus(AssetStatus status, UUID assetId, UUID tenantId);
+
+    @Modifying
+    @Query("UPDATE Asset SET category = :category WHERE id = :assetId AND tenantId = :tenantId")
+    void updateCategory(AssetCategory category, UUID assetId, UUID tenantId);
+
+    @Modifying
+    @Query("UPDATE Asset SET location = :location WHERE id = :assetId AND tenantId = :tenantId")
+    void updateLocation(String newLocation, UUID assetId, UUID tenantId);
+
+    @Modifying
+    @Query("UPDATE Asset SET currentDriver = :currentDriver WHERE id = :assetId AND tenantId = :tenantId")
+    void updateCurrentDriver(String newCurrentDriver, UUID assetId, UUID tenantId);
 }

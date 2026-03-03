@@ -63,14 +63,14 @@ public class Asset extends TenantEntity {
     @Column(name = "manufacture_year")
     private Integer manufactureYear; // ano-fabricação
 
-    @Column(name = "license_plate", length = 20, unique = true)
+    @Column(name = "license_plate", length = 20)
     private String licensePlate;
 
-    @Column(name = "chassis_number", length = 50, unique = true)
+    @Column(name = "chassis_number", length = 50)
     private String chassisNumber;             // chassis number
 
 // Brazil-specific (optional but super common)
-    @Column(name = "renavam", length = 20, unique = true)
+    @Column(name = "renavam", length = 20)
     private String renavam;
 
     @Column(name = "fleet_number", length = 30)

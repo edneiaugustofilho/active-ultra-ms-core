@@ -24,7 +24,7 @@ public class AssetEventRecordService {
         this.tenantService = tenantService;
     }
 
-    public void execute(AssetEventType eventType, UUID assetId) {
+    public void execute(AssetEventType eventType, String notes, UUID assetId) {
         if (assetId == null) {
             throw new IllegalArgumentException("ID de Ativo não informado.");
         }
@@ -35,6 +35,7 @@ public class AssetEventRecordService {
         AssetEvent assetEvent = AssetEvent.builder()
                 .eventType(eventType)
                 .asset(asset)
+                .notes(notes)
                 .build();
 
         assetEventService.save(new AssetEventSaveRequest(assetEvent));

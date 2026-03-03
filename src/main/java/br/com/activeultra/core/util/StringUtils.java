@@ -10,4 +10,7 @@ public class StringUtils {
         return !isBlankOrNull(value);
     }
 
+    public static String trimOrNull(String value) {
+        return value == null ? null : value.trim();
+    }
 }
