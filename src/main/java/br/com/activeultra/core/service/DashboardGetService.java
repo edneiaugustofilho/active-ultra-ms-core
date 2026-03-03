@@ -14,19 +14,21 @@ import java.util.Optional;
 public class DashboardGetService {
 
     private final TenantContext tenantContext;
-    private final DashboardRepository summaryRepository;
-    private final DashboardByStatusRepository summaryByStatusRepository;
-    private final DashboardByCategoryRepository summaryByCategoryRepository;
-
+    private final DashboardRepository dashboardRepository;
+    private final DashboardByStatusRepository dashboardByStatusRepository;
+    private final DashboardByCategoryRepository dashboardByCategoryRepository;
+    private final DashboardBuildService dashboardBuildService;
 
     public DashboardGetService(TenantContext tenantContext,
-                               DashboardRepository summaryRepository,
-                               DashboardByStatusRepository summaryByStatusRepository,
-                               DashboardByCategoryRepository summaryByCategoryRepository) {
+                               DashboardRepository dashboardRepository,
+                               DashboardByStatusRepository dashboardByStatusRepository,
+                               DashboardByCategoryRepository dashboardByCategoryRepository,
+                               DashboardBuildService dashboardBuildService) {
         this.tenantContext = tenantContext;
-        this.summaryRepository = summaryRepository;
-        this.summaryByStatusRepository = summaryByStatusRepository;
-        this.summaryByCategoryRepository = summaryByCategoryRepository;
+        this.dashboardRepository = dashboardRepository;
+        this.dashboardByStatusRepository = dashboardByStatusRepository;
+        this.dashboardByCategoryRepository = dashboardByCategoryRepository;
+        this.dashboardBuildService = dashboardBuildService;
     }
 
 
@@ -35,12 +37,18 @@ public class DashboardGetService {
             throw new IllegalArgumentException("Tenant ID is required");
         }
 
-        Optional<Dashboard> dashboardOptional = summaryRepository.findLastByTenantId(tenantContext.getTenantId().get());
+        Optional<Dashboard> dashboardOptional = dashboardRepository.findLastByTenantId(tenantContext.getTenantId().get());
+
+        if (dashboardOptional.isEmpty()) {
+            dashboardBuildService.execute();
+            dashboardOptional = dashboardRepository.findLastByTenantId(tenantContext.getTenantId().get());
+        }
+
         if (dashboardOptional.isPresent()) {
             Dashboard dashboard = dashboardOptional.get();
 
-            dashboard.setByStatus(summaryByStatusRepository.findBySummaryId(dashboard.getId()).orElse(new ArrayList<>()));
-            dashboard.setByCategory(summaryByCategoryRepository.findBySummaryId(dashboard.getId()).orElse(new ArrayList<>()));
+            dashboard.setByStatus(dashboardByStatusRepository.findBySummaryId(dashboard.getId()).orElse(new ArrayList<>()));
+            dashboard.setByCategory(dashboardByCategoryRepository.findBySummaryId(dashboard.getId()).orElse(new ArrayList<>()));
 
             return dashboard;
         }
