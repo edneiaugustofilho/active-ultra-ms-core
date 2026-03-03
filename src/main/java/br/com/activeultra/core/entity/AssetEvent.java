@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Entity
 @Table(
-        name = "asset_event",
+        name = "tb_asset_event",
         indexes = {
                 @Index(name = "ix_asset_event_asset_id_created_at", columnList = "asset_id, created_at"),
                 @Index(name = "ix_asset_event_type", columnList = "event_type"),

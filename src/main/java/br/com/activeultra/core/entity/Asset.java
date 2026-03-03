@@ -9,10 +9,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "tb_asset",
-        uniqueConstraints = {
-            @UniqueConstraint(name = "uk_assets_tenant_code", columnNames = {"tenant_id", "code"})
-        })
+@Table(name = "tb_asset")
 @Getter
 @Setter
 @SuperBuilder
