@@ -6,15 +6,16 @@ import br.com.activeultra.core.enums.AssetStatus;
 import br.com.activeultra.core.gateway.dto.AssetResumeDto;
 import br.com.activeultra.core.gateway.dto.PageResponse;
 import br.com.activeultra.core.repository.AssetRepository;
-import br.com.activeultra.core.repository.RepositoryHelper;
+import br.com.activeultra.core.util.RepositoryHelper;
 import br.com.activeultra.core.repository.SearchInput;
-import br.com.activeultra.core.tenant.TenantContext;
 import br.com.activeultra.core.util.EnumUtil;
 import br.com.activeultra.core.util.StringUtils;
 import jakarta.persistence.criteria.Predicate;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -25,12 +26,12 @@ import java.util.List;
 public class AssetSearchService {
 
     private final AssetRepository assetRepository;
-    private final TenantContext tenantContext;
+    private final TenantService tenantService;
 
     public AssetSearchService(AssetRepository assetRepository,
-                              TenantContext tenantContext) {
+                              TenantService tenantService) {
         this.assetRepository = assetRepository;
-        this.tenantContext = tenantContext;
+        this.tenantService = tenantService;
     }
 
     @Getter
@@ -51,7 +52,7 @@ public class AssetSearchService {
             final List<Predicate> predicates = new ArrayList<>();
 
             predicates.add(criteriaBuilder.equal(root.get("tenantId"),
-                    tenantContext.getTenantId().orElseThrow(() -> new IllegalStateException("Tenant not found"))));
+                    tenantService.getTenantId()));
 
             if (StringUtils.isNotBlankOrNull(input.getQuery())) {
                 final String query = input.getQuery();

@@ -6,4 +6,6 @@ public interface ActorProvider {
 
     UUID getCurrentUserId();
 
+    String getCurrenteUserName();
+
 }

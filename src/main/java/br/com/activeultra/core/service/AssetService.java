@@ -45,7 +45,7 @@ public class AssetService {
         asset.setStatus(AssetStatus.ACTIVE);
 
         repository.save(asset);
-        assetEventRecordService.execute(AssetEventType.CREATED, "Ativo criado", asset.getId());
+        assetEventRecordService.execute(AssetEventType.CREATED, "Ativo criado", "", asset.getId());
 
         return asset;
     }
@@ -72,7 +72,7 @@ public class AssetService {
 
         asset.setStatus(AssetStatus.INACTIVE);
         repository.save(asset);
-        assetEventRecordService.execute(AssetEventType.EXCLUDED, "Ativo excluído", asset.getId());
+        assetEventRecordService.execute(AssetEventType.EXCLUDED, "Ativo excluído", "", asset.getId());
     }
 
 }

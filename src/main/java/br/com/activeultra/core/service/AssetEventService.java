@@ -8,6 +8,11 @@ import br.com.activeultra.core.repository.AssetRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
 @Service
 public class AssetEventService {
 
@@ -53,6 +58,7 @@ public class AssetEventService {
 
     private void fillAuthor(AssetEvent assetEvent) {
         assetEvent.setActorUserId(actorProvider.getCurrentUserId());
+        assetEvent.setActorUserName(actorProvider.getCurrenteUserName());
     }
 
     @Transactional
@@ -65,6 +71,14 @@ public class AssetEventService {
 
 
         assetEventRepository.save(request.assetEvent());
+    }
+
+    public List<AssetEvent> list(UUID assetId) {
+        UUID tenatId = tenantService.getTenantId();
+
+        Optional<List<AssetEvent>> optionalAssetEvents = assetEventRepository.findAllByAssetIdAndTenantId(assetId, tenatId);
+
+        return optionalAssetEvents.orElse(new ArrayList<>());
     }
 
 }

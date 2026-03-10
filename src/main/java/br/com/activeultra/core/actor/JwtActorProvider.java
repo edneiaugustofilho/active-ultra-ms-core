@@ -10,8 +10,7 @@ import java.util.UUID;
 @Component
 public class JwtActorProvider implements ActorProvider {
 
-    @Override
-    public UUID getCurrentUserId() {
+    private Jwt getJwt() {
         Authentication authentication =
                 SecurityContextHolder.getContext().getAuthentication();
 
@@ -23,16 +22,32 @@ public class JwtActorProvider implements ActorProvider {
             throw new IllegalStateException("Autenticação inválida.");
         }
 
-        String id = jwt.getClaimAsString("id");
+        return jwt;
+    }
+
+    @Override
+    public UUID getCurrentUserId() {
+        String id = getJwt().getClaimAsString("id");
         if (id == null) {
-            throw new IllegalArgumentException("Id de usuário não presente ou inválido");
+            throw new IllegalStateException("Id de usuário não presente ou inválido");
         }
 
 
         try {
             return UUID.fromString(id);
         } catch (Exception e) {
-            throw new IllegalArgumentException("Id de usuário é inválido.");
+            throw new IllegalStateException("Id de usuário é inválido.");
         }
+    }
+
+    @Override
+    public String getCurrenteUserName() {
+        String username = getJwt().getSubject();
+        if (username == null) {
+            throw new IllegalStateException("Nome de usuário não presente ou inválido");
+        }
+
+
+        return username;
     }
 }

@@ -5,16 +5,18 @@ import br.com.activeultra.core.enums.AssetCategory;
 import br.com.activeultra.core.enums.AssetStatus;
 import br.com.activeultra.core.gateway.dto.AssetByCategoryDto;
 import br.com.activeultra.core.gateway.dto.AssetByStatusDto;
+import br.com.activeultra.core.gateway.dto.AssetResumeDto;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
-public interface AssetRepository extends JpaRepository<Asset, UUID>, JpaSpecificationExecutor<Asset>, AssetSearchRepository {
+public interface AssetRepository extends JpaRepository<Asset, UUID>, SearchRepository<AssetResumeDto, Asset> {
 
     boolean existsByTenantIdAndCodeIgnoreCase(UUID tenantId, String code);
 

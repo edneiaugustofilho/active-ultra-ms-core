@@ -46,7 +46,7 @@ public class AssetEventProcessService {
         Asset asset = assetRepository.findByIdAndTenantId(request.assetId(), tenantId)
                 .orElseThrow(() -> new IllegalArgumentException("Ativo não encontrado: " + request.assetId()));
 
-        final String notes;
+        final String summary;
 
         switch (eventType) {
             case STATUS_CHANGED -> {
@@ -60,7 +60,7 @@ public class AssetEventProcessService {
 
                 if (from == to) throw new IllegalArgumentException("Status já está em: " + to);
 
-                notes = "Status alterado de [" + from + "] para [" + to + "]";
+                summary = "Status alterado de [" + from + "] para [" + to + "]";
                 assetRepository.updateStatus(to, asset.getId(), tenantId);
             }
             case CATEGORY_CHANGED -> {
@@ -74,7 +74,7 @@ public class AssetEventProcessService {
 
                 if (from == to) throw new IllegalArgumentException("Categoria já está em: " + to);
 
-                notes = "Categoria alterada de [" + from + "] para [" + to + "]";
+                summary = "Categoria alterada de [" + from + "] para [" + to + "]";
                 assetRepository.updateCategory(to, asset.getId(), tenantId);
             }
             case LOCATION_CHANGED -> {
@@ -83,7 +83,7 @@ public class AssetEventProcessService {
 
                 if (Objects.equals(from, to)) throw new IllegalArgumentException("Local já está em: " + to);
 
-                notes = "Local alterado de [" + from + "] para [" + to + "]";
+                summary = "Local alterado de [" + from + "] para [" + to + "]";
                 assetRepository.updateLocation(to, asset.getId(), tenantId);
             }
             case RESPONSIBLE_CHANGED -> {
@@ -92,13 +92,13 @@ public class AssetEventProcessService {
 
                 if (Objects.equals(from, to)) throw new IllegalArgumentException("Responsável já está em: " + to);
 
-                notes = "Responsável alterado de [" + from + "] para [" + to + "]";
+                summary = "Responsável alterado de [" + from + "] para [" + to + "]";
                 assetRepository.updateCurrentDriver(to, asset.getId(), tenantId);
             }
             default -> throw new IllegalArgumentException("Tipo de evento não suportado: " + eventType);
         }
 
-        assetEventRecordService.execute(eventType, notes, asset.getId());
+        assetEventRecordService.execute(eventType, summary, request.notes(), asset.getId());
     }
 
 
